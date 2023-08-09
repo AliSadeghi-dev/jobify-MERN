@@ -13,7 +13,7 @@ const initialState = {
 const Register = () => {
   const [value, setValue] = useState(initialState);
   //  global state and useNavigate
-  const { isLoading, showAlert, displayAlert } = useAppContext();
+  const { isLoading, showAlert, displayAlert, registerUser } = useAppContext();
   const toggleMember = () => {
     setValue({ ...value, isMember: !value.isMember });
   };
@@ -28,6 +28,16 @@ const Register = () => {
     if (!email || !password || (!isMember && !name)) {
         displayAlert();
         return;
+    }
+    const currentUser = {
+      name,
+      email,
+      password,
+    };
+    if(isMember) {
+      console.log('already a member');
+    }else{
+      registerUser(currentUser);
     }
     console.log("value", value);
   };
@@ -62,7 +72,7 @@ const Register = () => {
           value={value.password}
           handleChange={handleChange}
         />
-        <button type="submit" className="btn btn-block">
+        <button type="submit" className="btn btn-block" disabled={isLoading}>
           submit
         </button>
         <p>

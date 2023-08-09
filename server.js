@@ -3,13 +3,20 @@ const dotenv = require("dotenv");
 const errorHandlerMiddleware = require("./middlewares/errorHandler");
 const notFoundPage = require("./middlewares/notFound");
 const connectDB = require("./db/connect");
+const { AllRoutes } = require("./router");
 
 const app = express();
 dotenv.config();
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 //middlewares
-app.use(notFoundPage);
 app.use(errorHandlerMiddleware);
+
+//routes
+app.use("/api/v1", AllRoutes);
+app.use(notFoundPage);
+
 
 const PORT = process.env.PORT || 3001;
 const start = async () => {

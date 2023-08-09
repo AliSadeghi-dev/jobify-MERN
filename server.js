@@ -1,3 +1,4 @@
+require("express-async-errors");
 const express = require("express");
 const dotenv = require("dotenv");
 const errorHandlerMiddleware = require("./middlewares/errorHandler");
@@ -10,13 +11,12 @@ dotenv.config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-//middlewares
-app.use(errorHandlerMiddleware);
-
 //routes
 app.use("/api/v1", AllRoutes);
-app.use(notFoundPage);
 
+//middlewares
+app.use(errorHandlerMiddleware);
+app.use(notFoundPage);
 
 const PORT = process.env.PORT || 3001;
 const start = async () => {

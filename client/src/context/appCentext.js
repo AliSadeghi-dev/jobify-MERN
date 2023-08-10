@@ -1,13 +1,13 @@
 import React, { useReducer, useContext } from "react";
-const reducer = require("./reducers");
-const axios = require("axios");
-const {
+import reducer from "./reducers";
+import axios from "axios";
+import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
   REGISTER_USER_BEGIN,
   REGISTER_USER_BEGIN_ERROR,
   REGISTER_USER_BEGIN_SUCCESS,
-} = require("./actions");
+} from "./actions";
 
 const initialState = {
   isLoading: false,
@@ -38,15 +38,8 @@ const AppProvider = ({ children }) => {
     console.log("object", currentUser);
     dispatch({ type: REGISTER_USER_BEGIN });
     try {
-      const response = await fetch("/api/v1/auth/register", {
-        method: "POST",
-        body: JSON.stringify(currentUser),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const res = await response.json();
-      const { user, token, location } = res;
+      const res = await axios.post("/api/v1/auth/register", currentUser);
+      const { user, token, location } = res.data;
       dispatch({
         type: REGISTER_USER_BEGIN_SUCCESS,
         payload: { user, token, location },
@@ -55,7 +48,7 @@ const AppProvider = ({ children }) => {
       console.log("error",err);
       dispatch({
         type: REGISTER_USER_BEGIN_ERROR,
-        payload: { msg: err },
+        payload: { msg: err.response.data.message },
       });
     }
     clearAlert();
